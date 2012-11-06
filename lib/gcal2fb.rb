@@ -1,0 +1,1 @@
+require 'gcal2fb/reminder'
