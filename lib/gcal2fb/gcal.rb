@@ -9,8 +9,8 @@ module Gcal2Fb
            'title' => event['title'],
            'location' => event['location'],
            'details' => event['details'],
-           'start_time' => Time.xmlschema(event['when'][0]['start']).localtime.strftime('%H:%M'),
-           'end_time' => Time.xmlschema(event['when'][0]['end']).localtime.strftime('%H:%M'),
+           'start_time' => DateTime.parse(event['when'][0]['start']).strftime('%H:%M'),
+           'end_time' => DateTime.parse(event['when'][0]['end']).strftime('%H:%M'),
           }
         end
       end
@@ -20,8 +20,8 @@ module Gcal2Fb
       uri = URI.parse("http://www.google.com")
       
       # Fetches events starting from next day 00:00 to 23:59
-      start_time = Time.parse(Date.today.next.to_s).xmlschema.to_s.gsub('+','%2B')
-      end_time = (Time.parse(Date.today.next.next.to_s) - 1).xmlschema.to_s.gsub('+','%2B')
+      start_time = Date.today.next.to_time.to_datetime.to_s.gsub('+','%2B')
+      end_time = (Date.today.next.next.to_time - 1).to_datetime.to_s.gsub('+','%2B')
       
       req = Net::HTTP::Get.new("/calendar/feeds/#{Config.cal_id}/public/full?start-min=#{start_time}&start-max=#{end_time}&sortorder=a&alt=jsonc")
       http = Net::HTTP.new(uri.host, uri.port)
